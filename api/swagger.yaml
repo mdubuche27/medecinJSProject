@@ -1,0 +1,175 @@
+---
+swagger: "2.0"
+info:
+  description: "Desc"
+  version: "1.0.0"
+  title: "API medecin"
+  contact:
+    email: "mdubuche27@gmail.com"
+host: "virtserver.swaggerhub.com"
+# basePath: "/mdubuche27/medecin"
+tags:
+- name: "medecin"
+  description: "Everything about your medecin"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /medecin:
+    get:
+      tags:
+      - "medecin"
+      summary: "Returns medecin inventories"
+      description: "Returns a map of status codes to quantities"
+      operationId: "getInventory"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/medecin"
+        "404":
+          description: "medecin not found"
+      x-swagger-router-controller: "Medecin"
+    post:
+      tags:
+      - "medecin"
+      summary: "Add a new medecin to the store"
+      description: ""
+      operationId: "addmedecin"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/medecin"
+      responses:
+        "200":
+          description: "successful operation"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "Medecin"
+  /medecin/addpatient/{patientId}:
+    post:
+      tags:
+      - "medecin"
+      summary: "Add a new medecin to the store"
+      description: "ajouter un patient "
+      operationId: "addPatient"
+      parameters:
+      - name: "patientId"
+        in: "path"
+        description: "ID of patient to add"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "medecin"
+        in: "body"
+        description: "medcin id"
+        required: true
+        schema:
+          $ref: "#/definitions/medecin"
+      responses:
+        "200":
+          description: "successful operation"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "Medecin"
+  /medecin/{medecinId}:
+    get:
+      tags:
+      - "medecin"
+      summary: "Find medecin by ID"
+      description: "Returns a single medecin"
+      operationId: "getmedecinById"
+      parameters:
+      - name: "medecinId"
+        in: "path"
+        description: "ID of medecin to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/medecin"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "medecin not found"
+      x-swagger-router-controller: "Medecin"
+  /medecin/nearest/{speciality}:
+    post:
+      tags:
+      - "medecin"
+      summary: "find nearest mueseum"
+      description: ""
+      operationId: "nearmedecin"
+      parameters:
+      - name: "speciality"
+        in: "path"
+        description: "type speciality"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/medecin"
+      responses:
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "Medecin"
+definitions:
+  medecin:
+    type: "object"
+    required:
+    - "city"
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        example: "medecin of NY"
+      city:
+        type: "string"
+        example: "New York"
+      lat:
+        type: "integer"
+        format: "int64"
+      long:
+        type: "integer"
+        format: "int64"
+      listPatient:
+        type: "array"
+        items: {
+            type: "integer"
+          }
+      speciality:
+        type: "string"
+        description: "specialite medecin"
+        enum:
+        - "pharma"
+        - "cardiaque"
+        - "urgentiste"
+    xml:
+      name: "medecin"
+    example:
+      speciality: "pharma"
+      city: "New York"
+      name: "medecin of NY"
+      id: 0
+      lat: 6
+      long: 1
+# Added by API Auto Mocking Plugin
+basePath: /mdubuche27
