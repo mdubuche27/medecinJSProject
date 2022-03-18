@@ -1,3 +1,4 @@
+const { default: axios } = require('axios');
 const Medecin = require('../models/medecin')
 
 
@@ -9,7 +10,7 @@ exports.addmedecin = function(body) {
       speciality: body.speciality,
       id: body.id,
       lat: body.lat,
-      long: body.long,
+      Long: body.Long,
       listPatient: []
     })
     newMedecin.save();
@@ -33,43 +34,31 @@ exports.getInventory = function() {
   });
 }
 
-exports.addPatient = function(patientId, medecin) {
-  return new Promise(function(resolve, reject) {
-    var res = {};
-
-    console.log(medecin.id)
-    console.log(patientId)
-    if (!medecin.listPatient.includes(patientId)){
-
-      medecin.listPatient.push(patientId)
-
-      Medecin.updateOne(
-        {"id": medecin.id},
-        medecin
-      ).then(med =>{
-        resolve(res[Object.keys(res)[0]]);
-      })
-    }
-    else {
-      resolve();
-    }
-  });
-}
-
-
-exports.getmedecinById = function(medecinId) {
-  return new Promise(function(resolve, reject) {
-    var res = {};
-    Museum.findOne({id : museumId}).then(med => {
-      res['application/json'] = med;
-      if (Object.keys(res).length > 0) {
-        resolve(res[Object.keys(res)[0]]);
-      } else {
-        resolve();
+exports.addPatient = function (patientId, medecin) {
+  return new Promise(function (resolve, reject) {
+    axios.get('http://localhost:8080/patient/' + patientId)
+    .then(res => {
+      if (res.status == 200){
+        if (!medecin.listPatient.includes(patientId)){
+          medecin.listPatient.push(patientId)
+          Medecin.updateOne(
+            {"id": medecin.id},
+            medecin
+          ).then(med =>{
+            resolve();
+          })
+        }
+        else {
+          reject();
+        }
       }
-    })
+    }
+    )
   });
 }
+
+
+
 
 
 exports.nearmedecin = function(speciality, body) {
@@ -83,9 +72,9 @@ exports.nearmedecin = function(speciality, body) {
       med.forEach(m => {
 
         var DistMLat = Math.abs(body.lat - m.lat) * Math.abs(body.lat - m.lat)
-        var DistMLong = Math.abs(body.long - m.long) * Math.abs(body.long - m.long)
+        var DistMLong = Math.abs(body.Long - m.Long) * Math.abs(body.Long - m.Long)
         var DistNLat = Math.abs(body.lat - nearest.lat) * Math.abs(body.lat - nearest.lat)
-        var DistNLong = Math.abs(body.long - nearest.long) * Math.abs(body.long - nearest.long)
+        var DistNLong = Math.abs(body.Long - nearest.Long) * Math.abs(body.Long - nearest.Long)
         
         var distM = Math.sqrt(DistMLat + DistMLong);
         var distNearest = Math.sqrt(DistNLat + DistNLong);

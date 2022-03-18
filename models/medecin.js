@@ -19,7 +19,7 @@ const MedecinSchema = new Schema({
     lat: {
         type: Number,
     },
-    long: {
+    Long: {
         type: Number,
     },
     listPatient:{
